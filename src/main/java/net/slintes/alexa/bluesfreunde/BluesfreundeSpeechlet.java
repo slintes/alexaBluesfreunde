@@ -107,14 +107,25 @@ public class BluesfreundeSpeechlet implements Speechlet {
 
         StringBuilder text = new StringBuilder();
         text.append("Hier ist die " + playlist.title + ". ");
+
+        String lastArtist = "";
+        String lastAlbum = "";
+
         for (Song song : playlist.songs) {
-            if (!song.artist.isEmpty()) {
+            if (!song.artist.isEmpty() && !song.artist.equalsIgnoreCase(lastArtist)) {
                 text.append("Von " + song.artist + ": ");
+                lastArtist = song.artist;
+                lastAlbum = "";
             } else {
                 text.append("Sowie ");
             }
-            if (!song.album.isEmpty()) {
+            if (!song.album.isEmpty() && !song.album.equalsIgnoreCase(lastAlbum)) {
                 text.append("aus dem Album " + song.album + ": ");
+                lastAlbum = song.album;
+            }
+            if (song.title.isEmpty()) {
+                // no title? this is something else than a song... skip it
+                continue;
             }
             text.append(song.title + ". ");
         }
