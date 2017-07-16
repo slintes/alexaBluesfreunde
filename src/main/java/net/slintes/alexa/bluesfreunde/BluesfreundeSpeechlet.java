@@ -101,7 +101,7 @@ public class BluesfreundeSpeechlet implements Speechlet {
         } catch (Exception e) {
             // Create the plain text output.
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Beim ermitteln der Playlist ist leider ein Fehler aufgetreten. Bitte versuchen sie es später noch einmal. Auf Wiederhören.");
+            speech.setText("Beim abrufen der Playlist ist leider ein Fehler aufgetreten. Bitte versuchen sie es später noch einmal. Auf Wiederhören.");
             return SpeechletResponse.newTellResponse(speech);
         }
 
@@ -129,7 +129,7 @@ public class BluesfreundeSpeechlet implements Speechlet {
             }
             text.append(song.title + ". ");
         }
-        text.append(" Das wars. Die nächste Sendung ist am " + playlist.nextShow + ".");
+        text.append(" Das wars. " + playlist.nextShow);
 
         // Create the Simple card content.
         SimpleCard card = new SimpleCard();
