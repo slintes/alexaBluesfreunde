@@ -75,15 +75,17 @@ public class PlaylistConverter {
 
             String ditto = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"";
 
+            boolean newArtist = true;
             String artist = parts[0];
-            if (artist.equals(lastArtist) && !artist.isEmpty()) {
+            if (artist.equals(lastArtist) || artist.isEmpty() || artist.equals("\"") || artist.startsWith("\"\"")) {
                 artist = ditto;
+                newArtist = false;
             } else {
                 lastArtist = artist;
             }
 
             String album = parts[1];
-            if (album.equals(lastAlbum) && !album.isEmpty()) {
+            if (!newArtist && (album.equals(lastAlbum) || album.isEmpty() || album.equals("\"") || album.startsWith("\"\""))) {
                 album = ditto;
             } else {
                 lastAlbum = album;
@@ -95,7 +97,7 @@ public class PlaylistConverter {
             if (parts.length == 4) {
                 label = parts[3];
             }
-            if (label.equals(lastLabel) && !album.isEmpty()) {
+            if (!newArtist && (label.equals(lastLabel) || label.isEmpty() || label.equals("\"") || label.startsWith("\"\""))) {
                 label = ditto;
             } else {
                 lastLabel = label;
