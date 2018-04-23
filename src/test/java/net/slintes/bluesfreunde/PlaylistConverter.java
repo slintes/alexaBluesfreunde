@@ -63,7 +63,21 @@ public class PlaylistConverter {
     private void parseLine(String line) {
         String[] parts = line.split(";");
         if (parts.length >= 3) {
+
+            int colArtist = 0;
+            int colAlbum = 1;
+            int colSong = 2;
+            int colLabel = 3;
+
+//            int colArtist = 0;
+//            int colAlbum = 1;
+//            int colSong = 3;
+//            int colLabel = 4;
+
             if (parts[0].startsWith("Playlist")) {
+                return;
+            }
+            if (parts[0].contains("Bluesstammtisch")) {
                 return;
             }
             if (parts[0].startsWith("Interpret")) {
@@ -75,29 +89,29 @@ public class PlaylistConverter {
 
             String ditto = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\"";
 
-            boolean newArtist = true;
-            String artist = parts[0];
-            if (artist.equals(lastArtist) || artist.isEmpty() || artist.equals("\"") || artist.startsWith("\"\"")) {
+            boolean newArtist = false;
+            String artist = parts[colArtist];
+            if (isDitto(newArtist, lastArtist, artist)) {
                 artist = ditto;
-                newArtist = false;
             } else {
                 lastArtist = artist;
+                newArtist = true;
             }
 
-            String album = parts[1];
-            if (!newArtist && (album.equals(lastAlbum) || album.isEmpty() || album.equals("\"") || album.startsWith("\"\""))) {
+            String album = parts[colAlbum];
+            if (isDitto(newArtist, lastAlbum, album)) {
                 album = ditto;
             } else {
                 lastAlbum = album;
             }
 
-            String song = parts[2];
+            String song = parts[colSong];
 
             String label = "";
-            if (parts.length == 4) {
-                label = parts[3];
+            if (parts.length >= colLabel + 1) {
+                label = parts[colLabel];
             }
-            if (!newArtist && (label.equals(lastLabel) || label.isEmpty() || label.equals("\"") || label.startsWith("\"\""))) {
+            if (isDitto(newArtist, lastLabel, label)) {
                 label = ditto;
             } else {
                 lastLabel = label;
@@ -105,6 +119,13 @@ public class PlaylistConverter {
 
             System.out.println(String.format("    <tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", artist, album, song, label));
         }
+    }
+
+    private static boolean isDitto(boolean newArtist, String oldVal, String newVal) {
+        if (!newArtist && (newVal.equals(oldVal) || newVal.trim().isEmpty() || newVal.equals("\"") || newVal.startsWith("\"\""))) {
+            return true;
+        }
+        return false;
     }
 
     static class MyDate {
